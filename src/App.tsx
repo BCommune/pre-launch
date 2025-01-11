@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Instagram, Linkedin, X } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 import logo from './assets/Bcommune_logo.png';
+import video from './assets/b-vid.mp4';
 
 function App() {
   const [showForm, setShowForm] = useState(false);
@@ -38,7 +39,7 @@ function App() {
         <div className="absolute inset-0 bg-slate-900/80 z-10" />
         <video autoPlay loop muted playsInline className="w-full h-full object-cover">
           <source
-            src="https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-futuristic-devices-99786-large.mp4"
+            src={video}
             type="video/mp4"
           />
         </video>
