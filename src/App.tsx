@@ -60,14 +60,7 @@ function App() {
         </motion.div>
 
         <div className="flex gap-3 md:gap-4">
-          <a
-            href="https://www.linkedin.com/company/b-commune/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-blue-400 transition-colors"
-          >
-            <Linkedin />
-          </a>
+          
           <a
             href="https://www.instagram.com/bcommune.online"
             target="_blank"
@@ -76,6 +69,16 @@ function App() {
           >
             <Instagram />
           </a>
+
+          <a
+            href="https://www.linkedin.com/company/b-commune/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-blue-400 transition-colors"
+          >
+            <Linkedin />
+          </a>
+          
         </div>
       </header>
 
