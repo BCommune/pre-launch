@@ -1,11 +1,10 @@
-name: Deploy to EC2
+name: Deploy to EC2 Static
 
 on:
-  pull_request:
+  push:
     branches:
-      - main 
-  workflow_dispatch: 
-    # Trigger deployment only on pushes to the `main` branch
+      - main  # Trigger deployment on pushes to the `main` branch
+  workflow_dispatch:  # Enable manual trigger from the GitHub Actions UI
 
 jobs:
   deploy:
@@ -26,15 +25,15 @@ jobs:
       - name: Install dependencies and build
         run: |
           npm install
-          sudo npm run build
+          npm run build
 
       # Step 4: Compress the build files
       - name: Archive build files
         run: tar -czf dist.tar.gz dist/
 
-      # Step 5: Deploy to EC2
+      # Step 5: Deploy to EC2 using SCP
       - name: Deploy to EC2
-        uses: appleboy/scp-action@v0.2.0
+        uses: appleboy/scp-action@master # Use the latest version
         with:
           host: ${{ secrets.EC2_HOST }}      # Add EC2 public IP in GitHub Secrets
           username: ubuntu                  # Your EC2 username
@@ -43,9 +42,9 @@ jobs:
           source: dist.tar.gz
           target: /home/ubuntu/
 
-      # Step 6: Extract and move files to Nginx directory
+      # Step 6: Extract and move files to Nginx directory using SSH
       - name: Extract and move files
-        uses: appleboy/ssh-action@v0.1.5
+        uses: appleboy/ssh-action@master # Use the latest version
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
