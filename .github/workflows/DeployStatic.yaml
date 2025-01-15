@@ -1,10 +1,10 @@
-name: Deploy to EC2 Static
+name: Deploy to EC2
 
 on:
   push:
     branches:
       - main  # Trigger deployment on pushes to the `main` branch
-  workflow_dispatch:  # Enable manual trigger from the GitHub Actions UI
+  workflow_dispatch:  # Enable manual deployment trigger from GitHub Actions UI
 
 jobs:
   deploy:
@@ -19,7 +19,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'  # Specify the Node.js version
+          node-version: '18'
 
       # Step 3: Install dependencies and build the app
       - name: Install dependencies and build
@@ -33,24 +33,38 @@ jobs:
 
       # Step 5: Deploy to EC2 using SCP
       - name: Deploy to EC2
-        uses: appleboy/scp-action@master # Use the latest version
+        uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.EC2_HOST }}      # Add EC2 public IP in GitHub Secrets
-          username: ubuntu                  # Your EC2 username
-          key: ${{ secrets.EC2_PRIVATE_KEY }} # Add private key in GitHub Secrets
-          port: 22                          # Default SSH port
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          port: 22
           source: dist.tar.gz
           target: /home/ubuntu/
 
-      # Step 6: Extract and move files to Nginx directory using SSH
+      # Step 6: Extract and move contents to Nginx directory using SSH
       - name: Extract and move files
-        uses: appleboy/ssh-action@master # Use the latest version
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           port: 22
           script: |
+            # Remove existing files in /var/www/html
             sudo rm -rf /var/www/html/*
-            sudo tar -xzf /home/ubuntu/dist.tar.gz -C /var/www/html/
+            
+            # Extract the dist.tar.gz archive
+            sudo tar -xzf /home/ubuntu/dist.tar.gz -C /home/ubuntu/
+            
+            # Move contents of 'dist' to /var/www/html
+            sudo mv /home/ubuntu/dist/* /var/www/html/
+            
+            # Move hidden files (if any)
+            sudo mv /home/ubuntu/dist/.[^.]* /var/www/html/ 2>/dev/null || true
+            
+            # Clean up temporary files
+            sudo rm -rf /home/ubuntu/dist /home/ubuntu/dist.tar.gz
+            
+            # Restart Nginx to apply changes
             sudo systemctl restart nginx
