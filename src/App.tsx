@@ -3,13 +3,76 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Instagram, Linkedin, X } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 import logo from './assets/Bcommune_logo.png';
+import Profile1 from './photos/preetham.jpg'
+import Profile2 from './photos/Mohan.jpeg'
+import Profile3 from './photos/vc.jpeg'
+import Profile4 from './photos/HARI.jpg'
 import video from './assets/b-vid.mp4';
 
+interface TeamMember {
+  name: string;
+  role: string;
+  phone: string;
+  email: string;
+  website: string;
+  address: string;
+  photo: string; // path or URL to their photo
+}
+
 function App() {
+  // Form states
   const [showForm, setShowForm] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
 
+  // Team member popup state
+  const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
+
+  // Example team data: replace with your real info
+  const teamMembers: TeamMember[] = [
+    {
+      name: 'Venkat Charan',
+      role: 'Founder',
+      phone: '+91 9030393909',
+      email: 'venkat.charan@bcommune.com',
+      website: 'www.example.com',
+      address: 'Hayathnagar, Hyderabad',
+      photo: '/project/src/photos/vc.jpeg',
+      photo: Profile3,
+    },
+    {
+      name: 'Haridhar Reddy',
+      role: 'Project Manager',
+      phone: '+91 85005 74929',
+      email: 'haridharreddy@gmail.com',
+      website: 'www.example.com',
+      address: 'Champapet, Hyderabad',
+      photo: '/project/src/photos/HARI.jpg',
+      photo: Profile4,
+    },
+    {
+      name: 'Mohan Varma',
+      role: 'Developer',
+      phone: '+91 93472 01829',
+      email: 'mohanvarmaa22@gmail.com',
+      website: 'www.example.com',
+      address: 'Vanasthalipuram, Hyderabad',
+      photo: '/project/src/photos/Mohan.jpeg',
+      photo: Profile2,
+    },
+    {
+      name: 'Preetham Sagar',
+      role: 'Designer',
+      phone: '+91 9502095440',
+      email: 'sandapreetham@gmail.com',
+      website: 'www.example.com',
+      address: 'Vanasthalipuram, Hyderabad',
+      photo: '/project/src/photos/preetham.jpg', // placeholder
+      photo: Profile1,
+    },
+  ];
+
+  // Handle the Interest Form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formRef.current) return;
@@ -38,10 +101,7 @@ function App() {
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-slate-900/80 z-10" />
         <video autoPlay loop muted playsInline className="w-full h-full object-cover">
-          <source
-            src={video}
-            type="video/mp4"
-          />
+          <source src={video} type="video/mp4" />
         </video>
       </div>
 
@@ -56,12 +116,15 @@ function App() {
           </a>
         </nav>
 
-        <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="flex items-center gap-2">
+        <motion.div
+          initial={{ scale: 0.8 }}
+          animate={{ scale: 1 }}
+          className="flex items-center gap-2"
+        >
           <img src={logo} alt="Logo" className="w-45 h-auto object-contain" />
         </motion.div>
 
         <div className="flex gap-3 md:gap-4">
-          
           <a
             href="https://www.instagram.com/bcommune.online"
             target="_blank"
@@ -79,7 +142,6 @@ function App() {
           >
             <Linkedin />
           </a>
-          
         </div>
       </header>
 
@@ -98,7 +160,8 @@ function App() {
             <motion.div className="text-blue-400">Tomorrow-Together</motion.div>
           </motion.h1>
           <motion.p className="text-base md:text-xl text-slate-300 max-w-xl md:max-w-2xl mx-auto">
-            A platform revolutionizing how businesses, individuals & ideas connect to shape the future of work and business.
+            A platform revolutionizing how businesses, individuals & ideas connect to shape the
+            future of work and business.
           </motion.p>
 
           <motion.div className="space-y-4">
@@ -108,7 +171,9 @@ function App() {
             >
               Show Interest
             </button>
-            <p className="text-xs md:text-sm text-slate-400">Signup for early access & invites</p>
+            <p className="text-xs md:text-sm text-slate-400">
+              Signup for early access & invites
+            </p>
           </motion.div>
         </motion.div>
       </section>
@@ -139,9 +204,40 @@ function App() {
               What is Bcommune?
             </h2>
             <p className="text-base md:text-xl text-slate-300 leading-relaxed">
-              Bcommune is a groundbreaking platform designed to bridge the gap between businesses, individuals, and innovation. Whether you're an entrepreneur seeking co-founders, a company hiring top talent, or a professional looking to collaborate, Bcommune empowers you to connect, grow, and build a better future.
+              Bcommune is a groundbreaking platform designed to bridge the gap between businesses,
+              individuals, and innovation. Whether you're an entrepreneur seeking co-founders, a
+              company hiring top talent, or a professional looking to collaborate, Bcommune empowers
+              you to connect, grow, and build a better future.
             </p>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Team Section */}
+      <section id="team" className="py-16 px-4 md:px-8 relative z-10">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-2xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500 mb-8">
+            Meet Our Team
+          </h2>
+          {/* Grid of 4 team members */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+            {teamMembers.map((member, index) => (
+              <div
+                key={index}
+                className="flex flex-col items-center text-center space-y-2"
+              >
+                {/* Rounded photo (80% radius) */}
+                <img
+                  src={member.photo}
+                  alt={member.name}
+                  className="w-40 h-40 object-cover rounded-[80%] cursor-pointer"
+                  onClick={() => setSelectedMember(member)}
+                />
+                <h3 className="text-xl font-semibold mt-2">{member.name}</h3>
+                <p className="text-slate-400">{member.role}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -151,11 +247,16 @@ function App() {
           <h2 className="text-2xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500">
             Contact Us
           </h2>
-          <p className="text-base md:text-xl text-slate-300">Have any questions or want to get in touch? Reach out to us:</p>
+          <p className="text-base md:text-xl text-slate-300">
+            Have any questions or want to get in touch? Reach out to us:
+          </p>
           <div className="space-y-4 text-sm md:text-lg">
             <p>
               Email:{' '}
-              <a href="mailto:thebcommunityforu@gmail.com" className="text-blue-400 hover:underline">
+              <a
+                href="mailto:thebcommunityforu@gmail.com"
+                className="text-blue-400 hover:underline"
+              >
                 thebcommunityforu@gmail.com
               </a>
             </p>
@@ -214,7 +315,10 @@ function App() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-slate-400 mb-1">
+                  <label
+                    htmlFor="message"
+                    className="block text-sm font-medium text-slate-400 mb-1"
+                  >
                     Message
                   </label>
                   <textarea
@@ -240,6 +344,61 @@ function App() {
                     : 'Submit'}
                 </button>
               </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Team Member Info Card Modal */}
+      <AnimatePresence>
+        {selectedMember && (
+          <motion.div
+            key="team-modal"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.8 }}
+              className="bg-slate-800 p-6 md:p-8 rounded-2xl w-full max-w-md relative"
+            >
+              <button
+                onClick={() => setSelectedMember(null)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-white"
+              >
+                <X size={24} />
+              </button>
+              <div className="flex flex-col items-center text-center">
+                {/* Photo */}
+                <img
+                  src={selectedMember.photo}
+                  alt={selectedMember.name}
+                  className="w-32 h-32 object-cover rounded-[80%] mb-4"
+                />
+                {/* Name & Role */}
+                <h3 className="text-xl md:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500 mb-2">
+                  {selectedMember.name}
+                </h3>
+                <p className="text-slate-400 mb-4">{selectedMember.role}</p>
+                {/* Card Details */}
+                <div className="text-sm md:text-base space-y-2 bg-slate-700 p-4 rounded-xl w-full">
+                  <p>
+                    <strong>Phone:</strong> {selectedMember.phone}
+                  </p>
+                  <p>
+                    <strong>Email:</strong> {selectedMember.email}
+                  </p>
+                  <p>
+                    <strong>Website:</strong> {selectedMember.website}
+                  </p>
+                  <p>
+                    <strong>Address:</strong> {selectedMember.address}
+                  </p>
+                </div>
+              </div>
             </motion.div>
           </motion.div>
         )}
